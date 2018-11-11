@@ -1,0 +1,21 @@
+# Windows
+Thumbs.db
+
+# macOS
+.DS_Store
+._*
+
+# tools
+*.bak
+*.swp
+*~
+
+# misc.
+*.exe
+*.o
+*.obj
+*.pdb
+
+*.mod
+*.old
+*.orig

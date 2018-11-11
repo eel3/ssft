@@ -1,0 +1,25 @@
+c-cross/**      text eol=crlf encoding=utf-8-with-signature-dos
+c-unix/**       text eol=lf   encoding=utf-8-unix
+cpp-cross-/**   text eol=crlf encoding=utf-8-with-signature-dos
+cpp-unix/**     text eol=lf   encoding=utf-8-unix
+gmake-*/**      text eol=lf   encoding=utf-8-unix
+
+*.bat   text eol=crlf encoding=cp932-dos
+*.cs    text eol=lf   encoding=utf-8-with-signature-unix
+*.go    text eol=lf   encoding=utf-8-unix
+*.java  text eol=crlf encoding=utf-8-dos
+*.kt    text eol=crlf encoding=utf-8-dos
+*.kts   text eol=crlf encoding=utf-8-dos
+*.m     text eol=lf   encoding=utf-8-unix
+*.mak   text eol=crlf encoding=cp932-dos
+*.mk    text eol=lf   encoding=utf-8-unix
+*.mm    text eol=lf   encoding=utf-8-unix
+*.ps1   text eol=crlf encoding=utf-16le-with-signature-dos
+*.pl    text eol=lf   encoding=utf-8-unix
+*.pp    text eol=lf   encoding=utf-8-unix
+*.py    text eol=lf   encoding=utf-8-unix
+*.rb    text eol=lf   encoding=utf-8-unix
+*.sh    text eol=lf   encoding=utf-8-unix
+*.swift text eol=lf   encoding=utf-8-unix
+*.tcl   text eol=lf   encoding=utf-8-unix
+
