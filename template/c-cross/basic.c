@@ -37,7 +37,7 @@ main(int argc, char *argv[])
 	/* FIXME: write a code here. */
 	int i;
 
-	for (i = 0; i < argc; ++i) {
+	for (i = 0; i < argc; i++) {
 		(void) puts(argv[i]);
 	}
 
