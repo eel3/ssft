@@ -22,9 +22,9 @@ def parse_args():
             'FIXME: <edit a description of this sctipt>')
 
     parser.add_argument('files', metavar='file', nargs='*', help='input file')
-    parser.add_argument('-o', '--output', metavar='file', nargs='?',
-                        type=argparse.FileType('wb'), const=sys.stdout,
-                        default=sys.stdout, help='place output in file')
+    parser.add_argument('-o', '--output', metavar='file', nargs=1,
+                        type=argparse.FileType('wb'), default=[sys.stdout],
+                        help='place output in file')
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0.0')
 
@@ -38,7 +38,7 @@ def main():
     if len(files) <= 0:
         files.append('-')
 
-    ostream = args[0].output
+    ostream = args[0].output[0]
     retval = 0
 
     for f in files:
