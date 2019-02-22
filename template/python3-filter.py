@@ -14,7 +14,7 @@ def eprint(*args, **keywords):
 
 def do_job(istream, ostream, opts):
     # FIXME: write a sctipt here.
-    ostream.write('hello, world\n')
+    ostream.write(b'hello, world\n')
 
 
 def parse_args():
@@ -23,7 +23,7 @@ def parse_args():
 
     parser.add_argument('files', metavar='file', nargs='*', help='input file')
     parser.add_argument('-o', '--output', metavar='file', nargs=1,
-                        type=argparse.FileType('wb'), default=[sys.stdout],
+                        type=argparse.FileType('wb'), default=[sys.stdout.buffer],
                         help='place output in file')
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0.0')
