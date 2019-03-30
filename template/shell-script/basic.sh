@@ -27,7 +27,7 @@ version() {
 # main routine
 
 opt=
-while getopts 'ho:v' opt; do
+while getopts 'hv' opt; do
     case $opt in
     h)      usage 0 ;;
     v)      version ;;
