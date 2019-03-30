@@ -12,6 +12,10 @@
 #		define _BSD_SOURCE
 #	endif /* ndef _BSD_SOURCE */
 
+#	ifndef _DEFAULT_SOURCE
+#		define _DEFAULT_SOURCE
+#	endif /* ndef _DEFAULT_SOURCE */
+
 #	ifndef _POSIX_C_SOURCE
 #		define _POSIX_C_SOURCE 199309L
 #	endif /* ndef _POSIX_C_SOURCE */
