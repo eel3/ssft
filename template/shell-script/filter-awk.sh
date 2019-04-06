@@ -26,7 +26,7 @@ version() {
 
 # error <message>
 error() {
-    echo "$progname:" "$@" 1>&2
+    echo "$progname:" ${@+"$@"} 1>&2
     exit 1
 }
 
