@@ -43,7 +43,7 @@ Please check help message `ssft -h`
 # Show a template list.
 ssft -l
 
-# Copy one or more template files in the current directory.
+# Copy one or more template files to the current directory.
 ssft shell-script/basic.sh
 ssft gmake-bin/linux/Makefile gmake-bin/unix-common/common.mk
 ```
