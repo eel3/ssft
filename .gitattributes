@@ -1,2 +1,4 @@
+bin/**      text eol=lf   encoding=utf-8-unix
+
 LICENSE     text eol=lf   encoding=utf-8-unix
 README.md   text eol=crlf encoding=utf-8-dos
