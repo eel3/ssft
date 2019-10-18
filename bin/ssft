@@ -31,7 +31,7 @@ PATH=/bin:/usr/bin
 export IFS LC_ALL=C LANG=C PATH
 
 readonly progname=${0##*/}
-readonly version=1.0.0
+readonly version=1.0.1
 
 if [ -n "$SSFT_TEMPLATE_PATH" ]; then
     template_path=$SSFT_TEMPLATE_PATH
@@ -66,11 +66,11 @@ warn() {
 copy_templates() {
     for i; do
         fn="$template_path/$i"
-        if [ ! -f "$fn" ]; then
+        if [ ! -e "$fn" ]; then
             warn "template not found: $i"
             continue
         fi
-        cp -ip "$fn" $(basename "$i") || warn "failed to copy the template: $i"
+        cp -ipR "$fn" $(basename "$i") || warn "failed to copy the template: $i"
     done
 }
 
