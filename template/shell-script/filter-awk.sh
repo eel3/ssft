@@ -9,7 +9,7 @@ IFS=$(printf ' \t\n_'); IFS=${IFS%_}
 PATH=/bin:/usr/bin
 export IFS LC_ALL=C LANG=C PATH
 
-readonly progname=${0##*/}
+readonly progname=$(basename "$0")
 readonly version=1.0.0
 
 # usage <exit-code>
