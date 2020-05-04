@@ -20,7 +20,7 @@ target_name     = app.exe       # FIXME
 
 lib_files       = winmm.lib     # FIXME
 
-win_ver         = 0x0601        # XXX Windows 7
+win_ver         = 0x0A00        # XXX Windows 10
 
 # ----------------------------------------------------------
 
