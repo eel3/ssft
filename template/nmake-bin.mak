@@ -43,7 +43,7 @@ usage: FORCE
 all: $(target_name)
 
 $(target_name): $(object_files)
-	link.exe /LTCG /OUT:$(target_name) /SUBSYSTEM:CONSOLE $(object_files) $(lib_files)
+	link.exe /LTCG /OUT:$@ /SUBSYSTEM:CONSOLE $** $(lib_files)
 
 clean: FORCE
 	del /F $(target_name) $(object_files) *.pdb
