@@ -16,6 +16,7 @@ CXXFLAGS        =               # FIXME
 OBJCFLAGS       =               # FIXME
 OBJCXXFLAGS     =               # FIXME
 CPPFLAGS        =               # FIXME
+ARFLAGS         = rcS
 
 WARNADD        :=
 

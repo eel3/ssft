@@ -52,7 +52,7 @@ CXXFLAGS       += $(OPTIM) $(CXXWARN) $(WARNADD)
 OBJCFLAGS      += $(OPTIM) $(OBJCWARN) $(WARNADD)
 OBJCXXFLAGS    += $(OPTIM) $(OBJCXXWARN) $(WARNADD)
 CPPFLAGS       += $(include-dirs)
-ARFLAGS        := rcS   # FIXME
+ARFLAGS        ?= rcS   # FIXME
 
 # ----------------------------------------------------------
 
