@@ -49,11 +49,12 @@ OPTIM          += -fno-common -fPIC
 
 WARN_COMMON    ?= -pedantic -Wall -Wextra
 WARN_C         ?=
+WARN_CXX       ?=
 
-CWARN          ?= -std=c89 $(WARN_COMMON) $(WARN_C)     # FIXME
-CXXWARN        ?= -std=c++11 $(WARN_COMMON)             # FIXME
-OBJCWARN       ?= -std=gnu99 $(WARN_COMMON) $(WARN_C)   # FIXME
-OBJCXXWARN     ?= -std=gnu++11 $(WARN_COMMON)           # FIXME
+CWARN          ?= -std=c89 $(WARN_COMMON) $(WARN_C)         # FIXME
+CXXWARN        ?= -std=c++11 $(WARN_COMMON) $(WARN_CXX)     # FIXME
+OBJCWARN       ?= -std=gnu99 $(WARN_COMMON) $(WARN_C)       # FIXME
+OBJCXXWARN     ?= -std=gnu++11 $(WARN_COMMON) $(WARN_CXX)   # FIXME
 
 CFLAGS         += $(OPTIM) $(CWARN) $(WARNADD)
 CXXFLAGS       += $(OPTIM) $(CXXWARN) $(WARNADD)
