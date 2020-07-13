@@ -299,17 +299,44 @@ DONE:
 
 int main(int argc, char *argv[])
 {
+	using std::cerr;
+	using std::cout;
+
 	program_name = my_basename(argv[0]);
 
-	if (argc == 2) {
-		if (STREQ(argv[1], "-h") || STREQ(argv[1], "--help")) {
-			usage(std::cout);
-			return EXIT_SUCCESS;
+	for (; (argc > 1) && (argv[1][0] == '-') && (argv[1][1] != '\0'); argc--, argv++) {
+		if (argv[1][1] == '-') {
+			const char *p { &argv[1][2] };
+
+			if (*p == '\0') {
+				argc--, argv++;
+				break;
+			} else if (STREQ(p, "help")) {
+				usage(cout);
+				return EXIT_SUCCESS;
+			} else if (STREQ(p, "version")) {
+				version();
+				return EXIT_SUCCESS;
+			} else {
+				usage(cerr);
+				return EXIT_FAILURE;
+			}
+			continue;
 		}
-		if (STREQ(argv[1], "-v") || STREQ(argv[1], "--version")) {
+
+		const char *p { &argv[1][1] };
+
+		do switch (*p) {
+		case 'h':
+			usage(cout);
+			return EXIT_SUCCESS;
+		case 'v':
 			version();
 			return EXIT_SUCCESS;
-		}
+		default:
+			usage(cerr);
+			return EXIT_FAILURE;
+		} while (*++p != '\0');
 	}
 
 	info("service starting...");
