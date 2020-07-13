@@ -137,15 +137,39 @@ main(int argc, char *argv[])
 	}
 #endif /* defined(_WIN32) || defined(_WIN64) */
 
-	if (argc == 2) {
-		if (STREQ(argv[1], "-h") || STREQ(argv[1], "--help")) {
+	for (; (argc > 1) && (argv[1][0] == '-') && (argv[1][1] != '\0'); argc--, argv++) {
+		const char *p = &argv[1][1];
+
+		if (argv[1][1] == '-') {
+			p = &argv[1][2];
+
+			if (*p == '\0') {
+				argc--, argv++;
+				break;
+			} else if (STREQ(p, "help")) {
+				usage(stdout);
+				return EXIT_SUCCESS;
+			} else if (STREQ(p, "version")) {
+				version();
+				return EXIT_SUCCESS;
+			} else {
+				usage(stderr);
+				return EXIT_FAILURE;
+			}
+			continue;
+		}
+
+		do switch (*p) {
+		case 'h':
 			usage(stdout);
 			return EXIT_SUCCESS;
-		}
-		if (STREQ(argv[1], "-v") || STREQ(argv[1], "--version")) {
+		case 'v':
 			version();
 			return EXIT_SUCCESS;
-		}
+		default:
+			usage(stderr);
+			return EXIT_FAILURE;
+		} while (*++p != '\0');
 	}
 
 	retval = EXIT_SUCCESS;
