@@ -3,13 +3,13 @@
 //
 // FIXME: <edit a description of this file>
 
-#if defined(WIN32) || defined(WIN64)
+#if defined(_WIN32) || defined(_WIN64)
 #	if !defined(__MINGW32__) && !defined(__MINGW64__)
 #		ifndef _CRT_SECURE_NO_WARNINGS
 #			define _CRT_SECURE_NO_WARNINGS
 #		endif /* ndef _CRT_SECURE_NO_WARNINGS */
 #	endif /* !defined(__MINGW32__) && !defined(__MINGW64__) */
-#endif /* defined(WIN32) || defined(WIN64) */
+#endif /* defined(_WIN32) || defined(_WIN64) */
 
 // C++ standard library
 #include <cassert>
