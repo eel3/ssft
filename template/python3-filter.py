@@ -44,7 +44,7 @@ def main():
     for f in files:
         try:
             if f == '-':
-                do_job(sys.stdin, ostream, args[0])
+                do_job(sys.stdin.buffer, ostream, args[0])
             else:
                 with open(f, 'rb') as istream:
                     do_job(istream, ostream, args[0])
