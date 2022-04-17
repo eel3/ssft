@@ -3,21 +3,41 @@
 # -*- coding: utf-8-unix -*-
 # vim:fileencoding=utf-8:ff=unix
 # @(#) FIXME: <edit a description of this sctipt>
+"""FIXME: <edit a description of this sctipt>.
+"""
 
 import argparse
 import sys
 
 
 def eprint(*args, **keywords):
+    """Wrapper function of print() (for error messages).
+
+    Args:
+        *args (tuple): Variable length argument list.
+        **keywords (dict[str, Any]): Arbitrary keyword arguments.
+    """
     print(sys.argv[0] + ':', *args, file=sys.stderr, **keywords)
 
 
 def do_job(istream, ostream, opts):
+    """Do a job.
+
+    Args:
+        istream (BinaryIO): Input binary IO stream.
+        ostream (BinaryIO): Output binary IO stream.
+        opts (argparse.Namespace): Option parameters.
+    """
     # FIXME: write a sctipt here.
     ostream.write(b'hello, world\n')
 
 
 def parse_args():
+    """Pares CLI arguments.
+
+    Returns:
+        tuple[argparse.Namespace, list[str]]: Results of argument parsing.
+    """
     parser = argparse.ArgumentParser(description=
             'FIXME: <edit a description of this sctipt>')
 
@@ -32,6 +52,8 @@ def parse_args():
 
 
 def main():
+    """Main routine function.
+    """
     args = parse_args()
 
     files = args[0].files
