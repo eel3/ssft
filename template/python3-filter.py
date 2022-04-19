@@ -7,7 +7,10 @@
 """
 
 import argparse
+import os
 import sys
+
+progname = os.path.basename(sys.argv[0])
 
 
 def eprint(*args, **keywords):
@@ -17,7 +20,7 @@ def eprint(*args, **keywords):
         *args (tuple): Variable length argument list.
         **keywords (dict[str, Any]): Arbitrary keyword arguments.
     """
-    print(sys.argv[0] + ':', *args, file=sys.stderr, **keywords)
+    print(progname + ':', *args, file=sys.stderr, **keywords)
 
 
 def do_job(istream, ostream, opts):
