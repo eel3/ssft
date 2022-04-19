@@ -33,7 +33,7 @@ def do_job(istream, ostream, opts):
 
 
 def parse_args():
-    """Pares CLI arguments.
+    """Parse CLI arguments.
 
     Returns:
         tuple[argparse.Namespace, list[str]]: Results of argument parsing.
