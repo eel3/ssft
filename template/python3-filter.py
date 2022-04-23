@@ -6,14 +6,18 @@
 """FIXME: <edit a description of this sctipt>.
 """
 
+from __future__ import annotations
+
 import argparse
 import os
 import sys
 
-progname = os.path.basename(sys.argv[0])
+from typing import Any, BinaryIO, Final, NoReturn
+
+progname: Final[str] = os.path.basename(sys.argv[0])
 
 
-def eprint(*args, **keywords):
+def eprint(*args: Any, **keywords: Any) -> None:
     """Wrapper function of print() (for error messages).
 
     Args:
@@ -23,7 +27,9 @@ def eprint(*args, **keywords):
     print(progname + ':', *args, file=sys.stderr, **keywords)
 
 
-def do_job(istream, ostream, opts):
+def do_job(istream: BinaryIO,
+           ostream: BinaryIO,
+           opts: argparse.Namespace) -> None:
     """Do a job.
 
     Args:
@@ -35,7 +41,7 @@ def do_job(istream, ostream, opts):
     ostream.write(b'hello, world\n')
 
 
-def parse_args():
+def parse_args() -> tuple[argparse.Namespace, list[str]]:
     """Parse CLI arguments.
 
     Returns:
@@ -54,7 +60,7 @@ def parse_args():
     return parser.parse_known_args()
 
 
-def main():
+def main() -> NoReturn:
     """Main routine function.
     """
     args = parse_args()
