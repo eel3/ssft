@@ -30,8 +30,8 @@ IFS=$(printf ' \t\n_'); IFS=${IFS%_}
 PATH=/bin:/usr/bin
 export IFS LC_ALL=C LANG=C PATH
 
-readonly progname=${0##*/}
-readonly version=1.0.2
+readonly progname="${0##*/}"
+readonly version=1.0.3
 
 if [ -n "${SSFT_TEMPLATE_PATH-}" ]; then
     template_path=$SSFT_TEMPLATE_PATH
@@ -42,7 +42,7 @@ fi
 # usage <exit-code>
 usage() {
     echo "usage: $progname [-hlv] <template ...>" 1>&2
-    exit $1
+    exit "$1"
 }
 
 # version (no parameter)
@@ -70,7 +70,7 @@ copy_templates() {
             warn "template not found: $i"
             continue
         fi
-        cp -ipR "$fn" $(basename "$i") || warn "failed to copy the template: $i"
+        cp -ipR "$fn" "$(basename "$i")" || warn "failed to copy the template: $i"
     done
 }
 
@@ -79,7 +79,7 @@ list_templates() {
     cd "$template_path" 2>/dev/null || error "template directory not found: $template_path"
     find ./ -type f -not -name .gitattributes -print |
     sed 's#^\./##'
-    cd - >/dev/null
+    cd - >/dev/null || return
 }
 
 # main routine
@@ -95,7 +95,7 @@ while getopts 'hlv' opt; do
     \?)     usage 1 ;;
     esac
 done
-shift $(($OPTIND - 1))
+shift $((OPTIND - 1))
 
 case "$cmd" in
 copy)   [ $# -ne 0 ] || usage 1
