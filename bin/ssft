@@ -31,9 +31,9 @@ PATH=/bin:/usr/bin
 export IFS LC_ALL=C LANG=C PATH
 
 readonly progname=${0##*/}
-readonly version=1.0.1
+readonly version=1.0.2
 
-if [ -n "$SSFT_TEMPLATE_PATH" ]; then
+if [ -n "${SSFT_TEMPLATE_PATH-}" ]; then
     template_path=$SSFT_TEMPLATE_PATH
 else
     template_path="$HOME/git/ssft/template"
