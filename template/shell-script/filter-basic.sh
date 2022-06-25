@@ -9,13 +9,13 @@ IFS=$(printf ' \t\n_'); IFS=${IFS%_}
 PATH=/bin:/usr/bin
 export IFS LC_ALL=C LANG=C PATH
 
-readonly progname=${0##*/}
+readonly progname="${0##*/}"
 readonly version=1.0.0
 
 # usage <exit-code>
 usage() {
     echo "usage: $progname [-hv] [-o output] [file ...]" 1>&2
-    exit $1
+    exit "$1"
 }
 
 # version (no parameter)
@@ -43,11 +43,10 @@ while getopts 'ho:v' opt; do
     \?)     usage 1 ;;
     esac
 done
-shift $(($OPTIND - 1))
+shift $((OPTIND - 1))
 
-if [ -n "$output" -a "$output" != - ]; then
-    { exec >"$output"; } 2>/dev/null
-    [ $? -eq 0 ] || error "$output: cannot open"
+if [ -n "$output" ] && [ "$output" != - ]; then
+    { exec >"$output"; } 2>/dev/null || error "$output: cannot open"
 fi
 
 # FIXME: write a sctipt here.

@@ -9,13 +9,13 @@ IFS=$(printf ' \t\n_'); IFS=${IFS%_}
 PATH=/bin:/usr/bin
 export IFS LC_ALL=C LANG=C PATH
 
-readonly progname=${0##*/}
+readonly progname="${0##*/}"
 readonly version=1.0.0
 
 # usage <exit-code>
 usage() {
     echo "usage: $progname [-hv] [file ...]" 1>&2
-    exit $1
+    exit "$1"
 }
 
 # version (no parameter)
@@ -34,7 +34,7 @@ while getopts 'hv' opt; do
     \?)     usage 1 ;;
     esac
 done
-shift $(($OPTIND - 1))
+shift $((OPTIND - 1))
 
 # FIXME: write a sctipt here.
 if [ $# = 0 ]; then
