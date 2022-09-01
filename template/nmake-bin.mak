@@ -26,8 +26,10 @@ win_ver         = 0x0A00        # XXX Windows 10
 
 !ifdef DEBUG
 ccdefs      = /MTd /Zi /D WIN32;_DEBUG;_CONSOLE;WINVER=$(win_ver);_WIN32_WINNT=$(win_ver);_CRT_SECURE_NO_WARNINGS;_WINDOWS;DEBUG
+linkflags   = /DEBUG
 !else
 ccdefs      = /MT /D WIN32;NDEBUG;_CONSOLE;WINVER=$(win_ver);_WIN32_WINNT=$(win_ver);_CRT_SECURE_NO_WARNINGS;_WINDOWS
+linkflags   =
 !endif
 
 CFLAGS      = /nologo /GL /GS /RTCs /RTCu /W4 $(ccdefs:;= /D ) /I $(include_dirs: = /I )
@@ -43,7 +45,7 @@ usage: FORCE
 all: $(target_name)
 
 $(target_name): $(object_files)
-	link.exe /NOLOGO /LTCG /OUT:$@ /SUBSYSTEM:CONSOLE $** $(lib_files)
+	link.exe /NOLOGO /LTCG /OUT:$@ /SUBSYSTEM:CONSOLE $(linkflags) $** $(lib_files)
 
 clean: FORCE
 	del /F $(target_name) $(object_files) *.pdb
