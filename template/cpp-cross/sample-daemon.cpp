@@ -339,6 +339,11 @@ int main(int argc, char *argv[])
 		} while (*++p != '\0');
 	}
 
+	if (argc >= 2) {
+		usage(cerr);
+		return EXIT_FAILURE;
+	}
+
 	info("service starting...");
 
 	auto retval = service_main();
