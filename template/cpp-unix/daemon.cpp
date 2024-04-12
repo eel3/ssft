@@ -267,8 +267,7 @@ bool do_job()
 
 int service_main()
 {
-	using std::chrono::milliseconds;
-	using std::this_thread::sleep_for;
+	using namespace std::literals::chrono_literals;
 
 	set_sigaction();
 
@@ -285,7 +284,7 @@ int service_main()
 	notice("service started.");
 	auto retval = EXIT_FAILURE;
 
-	for (milliseconds timeout { 10 }; !want_to_exit; sleep_for(timeout)) {
+	for (; !want_to_exit; std::this_thread::sleep_for(10ms)) {
 		// FIXME: modify the code below if you need.
 
 		if (want_to_restart) {
