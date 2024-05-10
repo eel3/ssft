@@ -92,7 +92,7 @@ std::string my_basename(const char * const s)
 
 	const auto path = trim_right(t, SEPS);
 	if (path.empty()) {
-		return std::string { t.back() };
+		return string { t.back() };
 	}
 
 	auto pos = path.find_last_of(SEPS);
