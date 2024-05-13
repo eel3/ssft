@@ -99,21 +99,16 @@ std::string my_basename(const char * const s)
 		return DOT;
 	}
 
-	string path = s;
+	string t = s;
 
-	if (path.empty()) {
+	if (t.empty()) {
 		return DOT;
 	}
-	if (path == SEP) {
-		return SEP;
-	}
-#if defined(_WIN32) || defined(_WIN64)
-	if (path == WSEP) {
-		return WSEP;
-	}
-#endif /* defined(_WIN32) || defined(_WIN64) */
 
-	path = trim_right(path, SEPS);
+	const auto path = trim_right(t, SEPS);
+	if (path.empty()) {
+		return string { t.back() };
+	}
 
 	auto pos = path.find_last_of(SEPS);
 	return (pos == string::npos) ? path : path.substr(pos + 1);
