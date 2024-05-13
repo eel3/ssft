@@ -34,7 +34,7 @@ extern "C" {
 int main(int argc, char *argv[])
 {
 	// FIXME: write a code here.
-	std::for_each(&argv[0], &argv[argc], [] (char *arg) {
+	std::for_each(&argv[0], &argv[argc], [](const auto *arg) {
 		std::cout << arg << std::endl;
 	});
 }
