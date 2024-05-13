@@ -3,13 +3,17 @@
 //
 // FIXME: <edit a description of this file>
 
+/* ---------------------------------------------------------------------- */
+/*  */
+/* ---------------------------------------------------------------------- */
+
 #if defined(_WIN32) || defined(_WIN64)
 #	if !defined(__MINGW32__) && !defined(__MINGW64__)
 #		ifndef _CRT_SECURE_NO_WARNINGS
 #			define _CRT_SECURE_NO_WARNINGS
-#		endif /* ndef _CRT_SECURE_NO_WARNINGS */
-#	endif /* !defined(__MINGW32__) && !defined(__MINGW64__) */
-#endif /* defined(_WIN32) || defined(_WIN64) */
+#		endif // ndef _CRT_SECURE_NO_WARNINGS
+#	endif // !defined(__MINGW32__) && !defined(__MINGW64__)
+#endif // defined(_WIN32) || defined(_WIN64)
 
 // C++ standard library
 #include <cassert>
@@ -69,13 +73,11 @@ volatile sig_atomic_t want_to_exit { ATOMIC_FALSE };
 /*  */
 /* ---------------------------------------------------------------------- */
 
-std::string trim_right(const std::string &s, const std::string &chars = "\t\n\v\f\r ")
+inline std::string trim_right(const std::string& s, const std::string& chars = "\t\n\v\f\r ")
 {
-	using std::string;
-
 	auto rpos = s.find_last_not_of(chars);
 
-	return (rpos == string::npos) ? string() : s.substr(0, rpos + 1);
+	return (rpos == std::string::npos) ? "" : s.substr(0, rpos + 1);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -86,14 +88,14 @@ std::string my_basename(const char * const s)
 {
 	using std::string;
 
-	static const string DOT = ".";
-	static const string SEP = "/";
+	static const string DOT { "." };
+	static const string SEP { "/" };
 #if defined(_WIN32) || defined(_WIN64)
-	static const string WSEP = "\\";
-	static const string SEPS = SEP + WSEP;
-#else /* defined(_WIN32) || defined(_WIN64) */
-	static const string SEPS = SEP;
-#endif /* defined(_WIN32) || defined(_WIN64) */
+	static const string WSEP { "\\" };
+	static const string SEPS { SEP + WSEP };
+#else // defined(_WIN32) || defined(_WIN64)
+	static const string SEPS { SEP };
+#endif // defined(_WIN32) || defined(_WIN64)
 
 	if (s == nullptr) {
 		return DOT;
@@ -156,7 +158,7 @@ void writelog(const char * const fmt, ...)
 /*  */
 /* ---------------------------------------------------------------------- */
 
-void usage(std::ostream &out)
+void usage(std::ostream& out)
 {
 	out << "usage: " << program_name << " [-hv]" << std::endl;
 }
@@ -300,7 +302,7 @@ int main(int argc, char *argv[])
 
 	for (; (argc > 1) && (argv[1][0] == '-') && (argv[1][1] != '\0'); argc--, argv++) {
 		if (argv[1][1] == '-') {
-			const char *p { &argv[1][2] };
+			const auto *p = &argv[1][2];
 
 			if (*p == '\0') {
 				argc--, argv++;
@@ -318,7 +320,7 @@ int main(int argc, char *argv[])
 			continue;
 		}
 
-		const char *p { &argv[1][1] };
+		const auto *p = &argv[1][1];
 
 		do switch (*p) {
 		case 'h':
