@@ -10,8 +10,8 @@
 #ifdef __linux__
 #	ifndef _POSIX_C_SOURCE
 #		define _POSIX_C_SOURCE 2
-#	endif /* ndef _POSIX_C_SOURCE */
-#endif /* def __linux__ */
+#	endif // ndef _POSIX_C_SOURCE
+#endif // def __linux__
 
 // C++ standard library
 #include <algorithm>
@@ -50,7 +50,7 @@ extern "C" {
 #	ifndef STDOUT_FILENO
 #		define STDOUT_FILENO 1
 #	endif
-#endif /* defined(_WIN32) || defined(_WIN64) */
+#endif // defined(_WIN32) || defined(_WIN64)
 
 namespace {
 
@@ -64,7 +64,7 @@ std::string program_name;
 /*  */
 /* ---------------------------------------------------------------------- */
 
-void usage(std::ostream &out)
+void usage(std::ostream& out)
 {
 	out << "usage: " << program_name << " [options] [file...]\n"
 	    << "    -o FILE\n"
@@ -84,9 +84,9 @@ void version()
 /*  */
 /* ---------------------------------------------------------------------- */
 
-void do_job(std::istream &in, std::ostream &out)
+void do_job(std::istream& /* in */, std::ostream& out)
 {
-	/* FIXME: write a code here. */
+	// FIXME: write a code here.
 	out << "hello, world" << std::endl;
 }
 
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 		perror("_setmode");
 		return EXIT_FAILURE;
 	}
-#endif /* defined(_WIN32) || defined(_WIN64) */
+#endif // defined(_WIN32) || defined(_WIN64)
 
 	string output { "-" };
 
@@ -149,14 +149,14 @@ int main(int argc, char *argv[])
 			return EXIT_FAILURE;
 		}
 	}
-	std::ostream &out = use_stdout ? cout : fout;
+	std::ostream& out = use_stdout ? cout : fout;
 
 	auto retval = EXIT_SUCCESS;
 
 	if (optind >= argc) {
 		do_job(cin, out);
 	} else {
-		std::for_each(&argv[optind], &argv[argc], [&out, &retval] (const char * const s) {
+		std::for_each(&argv[optind], &argv[argc], [&out, &retval](const auto *s) {
 			string arg { s };
 
 			if (arg == "-") {
