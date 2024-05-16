@@ -10,16 +10,16 @@
 #ifdef __linux__
 #	ifndef _BSD_SOURCE
 #		define _BSD_SOURCE
-#	endif /* ndef _BSD_SOURCE */
+#	endif // ndef _BSD_SOURCE
 
 #	ifndef _DEFAULT_SOURCE
 #		define _DEFAULT_SOURCE
-#	endif /* ndef _DEFAULT_SOURCE */
+#	endif // ndef _DEFAULT_SOURCE
 
 #	ifndef _POSIX_C_SOURCE
 #		define _POSIX_C_SOURCE 199309L
-#	endif /* ndef _POSIX_C_SOURCE */
-#endif /* def __linux__ */
+#	endif // ndef _POSIX_C_SOURCE
+#endif // def __linux__
 
 // C++ standard library
 #include <cassert>
@@ -84,7 +84,7 @@ volatile sig_atomic_t want_to_restart { ATOMIC_FALSE };
 /*  */
 /* ---------------------------------------------------------------------- */
 
-#define BZERO(p, size) ((void) memset((p), 0, (size)))
+#define BZERO(p, size) ((void) std::memset((p), 0, (size)))
 
 /* ---------------------------------------------------------------------- */
 /*  */
@@ -136,7 +136,7 @@ void writelog(const int pri, const char * const fmt, ...)
 /*  */
 /* ---------------------------------------------------------------------- */
 
-void usage(std::ostream &out)
+void usage(std::ostream& out)
 {
 	out << "usage: " << program_name << " [options]\n"
 	    << "    -d\n"
