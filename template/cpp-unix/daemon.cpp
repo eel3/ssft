@@ -157,7 +157,7 @@ void version()
 /*  */
 /* ---------------------------------------------------------------------- */
 
-void trap_exit(int signum)
+void trap_exit(int signum) noexcept
 {
 	assert((signum == SIGINT) || (signum == SIGTERM) || (signum == SIGQUIT));
 	(void) signum;
@@ -169,7 +169,7 @@ void trap_exit(int signum)
 /*  */
 /* ---------------------------------------------------------------------- */
 
-void trap_restart(int signum)
+void trap_restart(int signum) noexcept
 {
 	assert(signum == SIGHUP);
 	(void) signum;
@@ -181,7 +181,7 @@ void trap_restart(int signum)
 /*  */
 /* ---------------------------------------------------------------------- */
 
-void set_sigaction()
+void set_sigaction() noexcept
 {
 	struct sigaction sa;
 
