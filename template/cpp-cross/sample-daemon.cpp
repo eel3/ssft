@@ -176,7 +176,7 @@ void version()
 /*  */
 /* ---------------------------------------------------------------------- */
 
-void trap_exit(int signum)
+void trap_exit(int signum) noexcept
 {
 	assert((signum == SIGINT) || (signum == SIGTERM));
 	(void) signum;
@@ -188,7 +188,7 @@ void trap_exit(int signum)
 /*  */
 /* ---------------------------------------------------------------------- */
 
-void set_signal_handler()
+void set_signal_handler() noexcept
 {
 	(void) signal(SIGINT,  trap_exit);
 	(void) signal(SIGTERM, trap_exit);
