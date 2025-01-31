@@ -154,7 +154,7 @@ main(int argc, char *argv[])
 				usage(stdout);
 				return EXIT_SUCCESS;
 			} else if (STREQ(p, "output")) {
-				if ((argc < 3) || (argv[2][0] == '-')) {
+				if (argc < 3) {
 					usage(stderr);
 					return EXIT_FAILURE;
 				} else {
@@ -179,7 +179,7 @@ main(int argc, char *argv[])
 			if (p[1] != '\0') {
 				output = &p[1];
 				p += strlen(output);
-			} else if ((argc < 3) || (argv[2][0] == '-')) {
+			} else if (argc < 3) {
 				usage(stderr);
 				return EXIT_FAILURE;
 			} else {
