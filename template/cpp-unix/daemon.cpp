@@ -8,17 +8,9 @@
 /* ---------------------------------------------------------------------- */
 
 #ifdef __linux__
-#	ifndef _BSD_SOURCE
-#		define _BSD_SOURCE
-#	endif // ndef _BSD_SOURCE
-
 #	ifndef _DEFAULT_SOURCE
 #		define _DEFAULT_SOURCE
 #	endif // ndef _DEFAULT_SOURCE
-
-#	ifndef _POSIX_C_SOURCE
-#		define _POSIX_C_SOURCE 199309L
-#	endif // ndef _POSIX_C_SOURCE
 #endif // def __linux__
 
 // C++ standard library
@@ -32,7 +24,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <string>
+#include <string_view>
 #include <thread>
 
 // Unix system call and library
@@ -73,7 +65,7 @@ constexpr int MY_SYSLOG_FACILITY { LOG_LOCAL7 };
 /*  */
 /* ---------------------------------------------------------------------- */
 
-std::string program_name;
+std::string_view program_name;
 
 bool debug_mode { false };
 
@@ -354,7 +346,7 @@ int main(int argc, char *argv[])
 	auto retval = EXIT_FAILURE;
 
 	if (!debug_mode) {
-		openlog(program_name.c_str(), LOG_PID | LOG_NDELAY, MY_SYSLOG_FACILITY);
+		openlog(program_name.data(), LOG_PID | LOG_NDELAY, MY_SYSLOG_FACILITY);
 		errno = 0;
 		if (daemon(0, 0) < 0) {
 			error("failed to become daemon: %m.");

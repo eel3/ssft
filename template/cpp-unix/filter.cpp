@@ -14,11 +14,12 @@
 #endif // def __linux__
 
 // C++ standard library
-#include <algorithm>
+#include <cerrno>
 #include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <iostream>
-#include <string>
+#include <string_view>
 
 // Unix system call and library
 #include <libgen.h>
@@ -41,7 +42,7 @@ extern "C" {
 }
 
 #if defined(_WIN32) || defined(_WIN64)
-#	include <cerrno>
+#	include <cstdio>
 #	include <fcntl.h>
 #	include <io.h>
 #	ifndef STDIN_FILENO
@@ -58,7 +59,7 @@ namespace {
 /*  */
 /* ---------------------------------------------------------------------- */
 
-std::string program_name;
+std::string_view program_name;
 
 /* ---------------------------------------------------------------------- */
 /*  */
@@ -98,29 +99,30 @@ void do_job(std::istream& /* in */, std::ostream& out)
 
 int main(int argc, char *argv[])
 {
-	using std::cerr;
-	using std::cin;
-	using std::cout;
-	using std::endl;
-	using std::ios;
-	using std::string;
+	using namespace std::string_view_literals;
+	using std::cerr,
+	      std::cin,
+	      std::cout,
+	      std::endl,
+	      std::ios,
+	      std::strerror;
 
 	program_name = basename(argv[0]);
 
 #if defined(_WIN32) || defined(_WIN64)
 	errno = 0;
 	if (_setmode(STDIN_FILENO, O_BINARY) == -1) {
-		perror("_setmode");
+		std::perror("_setmode");
 		return EXIT_FAILURE;
 	}
 	errno = 0;
 	if (_setmode(STDOUT_FILENO, O_BINARY) == -1) {
-		perror("_setmode");
+		std::perror("_setmode");
 		return EXIT_FAILURE;
 	}
 #endif // defined(_WIN32) || defined(_WIN64)
 
-	string output { "-" };
+	auto output = "-"sv;
 
 	int c;
 	while ((c = getopt(argc, argv, "ho:v")) != -1) {
@@ -140,37 +142,40 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	auto use_stdout = (output == "-");
 	std::ofstream fout;
-	if (!use_stdout) {
-		fout.open(output, ios::binary);
-		if (!fout) {
-			cerr << program_name << ": " << output << ": cannot open" << endl;
-			return EXIT_FAILURE;
+	auto& out = [&]() mutable -> std::ostream& {
+		if (output == "-") {
+			return cout;
+		} else {
+			errno = 0;
+			fout.open(output.data(), ios::binary);
+			if (!fout) {
+				cerr << program_name << ": " << output << ": " << strerror(errno) << endl;
+				std::exit(EXIT_FAILURE);
+			}
+			return fout;
 		}
-	}
-	std::ostream& out = use_stdout ? cout : fout;
+	}();
 
 	auto retval = EXIT_SUCCESS;
 
 	if (optind >= argc) {
 		do_job(cin, out);
 	} else {
-		std::for_each(&argv[optind], &argv[argc], [&out, &retval](const auto *s) {
-			string arg { s };
-
-			if (arg == "-") {
+		for (auto i = optind; i < argc; i++) {
+			if (argv[i] == "-"sv) {
 				do_job(cin, out);
 			} else {
-				std::ifstream fin(arg, ios::binary);
+				errno = 0;
+				std::ifstream fin(argv[i], ios::binary);
 				if (!fin) {
-					cerr << program_name << ": " << arg << ": cannot open" << endl;
+					cerr << program_name << ": " << argv[i] << ": " << strerror(errno) << endl;
 					retval = EXIT_FAILURE;
-					return;
+					continue;
 				}
 				do_job(fin, out);
 			}
-		});
+		}
 	}
 
 	return retval;

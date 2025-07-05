@@ -17,7 +17,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
-#include <string>
+#include <string_view>
 
 // Unix system call and library
 #include <libgen.h>
@@ -45,7 +45,7 @@ namespace {
 /*  */
 /* ---------------------------------------------------------------------- */
 
-std::string program_name;
+std::string_view program_name;
 
 /* ---------------------------------------------------------------------- */
 /*  */
@@ -73,8 +73,8 @@ void version()
 
 int main(int argc, char *argv[])
 {
-	using std::cerr;
-	using std::cout;
+	using std::cerr,
+	      std::cout;
 
 	program_name = basename(argv[0]);
 
