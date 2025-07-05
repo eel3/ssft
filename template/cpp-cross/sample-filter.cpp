@@ -16,12 +16,14 @@
 #endif // defined(_WIN32) || defined(_WIN64)
 
 // C++ standard library
-#include <algorithm>
+#include <cerrno>
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <string_view>
 
 // C++ third party library
 // FIXME: include header files.
@@ -40,7 +42,7 @@ extern "C" {
 }
 
 #if defined(_WIN32) || defined(_WIN64)
-#	include <cerrno>
+#	include <cstdio>
 #	include <fcntl.h>
 #	include <io.h>
 #	ifndef STDIN_FILENO
@@ -63,53 +65,13 @@ std::string program_name;
 /*  */
 /* ---------------------------------------------------------------------- */
 
-#define STREQ(s1, s2) (((s1)[0] == (s2)[0]) && (std::strcmp((s1), (s2)) == 0))
-
-/* ---------------------------------------------------------------------- */
-/*  */
-/* ---------------------------------------------------------------------- */
-
-inline std::string trim_right(const std::string& s, const std::string& chars = "\t\n\v\f\r ")
+std::string my_basename(std::string_view s)
 {
-	auto rpos = s.find_last_not_of(chars);
+	std::filesystem::path path { s };
 
-	return (rpos == std::string::npos) ? "" : s.substr(0, rpos + 1);
-}
-
-/* ---------------------------------------------------------------------- */
-/*  */
-/* ---------------------------------------------------------------------- */
-
-std::string my_basename(const char * const s)
-{
-	using std::string;
-
-	static const string DOT { "." };
-	static const string SEP { "/" };
-#if defined(_WIN32) || defined(_WIN64)
-	static const string WSEP { "\\" };
-	static const string SEPS { SEP + WSEP };
-#else // defined(_WIN32) || defined(_WIN64)
-	static const string SEPS { SEP };
-#endif // defined(_WIN32) || defined(_WIN64)
-
-	if (s == nullptr) {
-		return DOT;
-	}
-
-	string t = s;
-
-	if (t.empty()) {
-		return DOT;
-	}
-
-	const auto path = trim_right(t, SEPS);
-	if (path.empty()) {
-		return string { t.back() };
-	}
-
-	auto pos = path.find_last_of(SEPS);
-	return (pos == string::npos) ? path : path.substr(pos + 1);
+	return path.empty() ? "."
+	       : path.has_filename() ? path.filename().string()
+	       : path.string();
 }
 
 /* ---------------------------------------------------------------------- */
@@ -148,41 +110,44 @@ void do_job(std::istream& /* in */, std::ostream& out)
 
 int main(int argc, char *argv[])
 {
-	using std::cerr;
-	using std::cin;
-	using std::cout;
-	using std::endl;
-	using std::ios;
-	using std::string;
+	using namespace std::string_view_literals;
+	using std::cerr,
+	      std::cin,
+	      std::cout,
+	      std::endl,
+	      std::ios,
+	      std::strerror;
 
 	program_name = my_basename(argv[0]);
 
 #if defined(_WIN32) || defined(_WIN64)
 	errno = 0;
 	if (_setmode(STDIN_FILENO, O_BINARY) == -1) {
-		perror("_setmode");
+		std::perror("_setmode");
 		return EXIT_FAILURE;
 	}
 	errno = 0;
 	if (_setmode(STDOUT_FILENO, O_BINARY) == -1) {
-		perror("_setmode");
+		std::perror("_setmode");
 		return EXIT_FAILURE;
 	}
 #endif // defined(_WIN32) || defined(_WIN64)
 
-	string output { "-" };
+	auto output = "-"sv;
 
 	for (; (argc > 1) && (argv[1][0] == '-') && (argv[1][1] != '\0'); argc--, argv++) {
+		const auto *p = &argv[1][1];
+
 		if (argv[1][1] == '-') {
-			const auto *p = &argv[1][2];
+			p = &argv[1][2];
 
 			if (*p == '\0') {
 				argc--, argv++;
 				break;
-			} else if (STREQ(p, "help")) {
+			} else if (p == "help"sv) {
 				usage(cout);
 				return EXIT_SUCCESS;
-			} else if (STREQ(p, "output")) {
+			} else if (p == "output"sv) {
 				if (argc < 3) {
 					usage(cerr);
 					return EXIT_FAILURE;
@@ -190,7 +155,7 @@ int main(int argc, char *argv[])
 					argc--, argv++;
 					output = argv[1];
 				}
-			} else if (STREQ(p, "version")) {
+			} else if (p == "version"sv) {
 				version();
 				return EXIT_SUCCESS;
 			} else {
@@ -199,8 +164,6 @@ int main(int argc, char *argv[])
 			}
 			continue;
 		}
-
-		const auto *p = &argv[1][1];
 
 		do switch (*p) {
 		case 'h':
@@ -227,37 +190,40 @@ int main(int argc, char *argv[])
 		} while (*++p != '\0');
 	}
 
-	auto use_stdout = (output == "-");
 	std::ofstream fout;
-	if (!use_stdout) {
-		fout.open(output, ios::binary);
-		if (!fout) {
-			cerr << program_name << ": " << output << ": cannot open" << endl;
-			return EXIT_FAILURE;
+	auto& out = [&]() mutable -> std::ostream& {
+		if (output == "-") {
+			return cout;
+		} else {
+			errno = 0;
+			fout.open(output.data(), ios::binary);
+			if (!fout) {
+				cerr << program_name << ": " << output << ": " << strerror(errno) << endl;
+				std::exit(EXIT_FAILURE);
+			}
+			return fout;
 		}
-	}
-	std::ostream& out = use_stdout ? cout : fout;
+	}();
 
 	auto retval = EXIT_SUCCESS;
 
 	if (argc <= 1) {
 		do_job(cin, out);
 	} else {
-		std::for_each(&argv[1], &argv[argc], [&out, &retval](const auto *s) {
-			string arg { s };
-
-			if (arg == "-") {
-				do_job(std::cin, out);
+		for (auto i = 1; i < argc; i++) {
+			if (argv[i] == "-"sv) {
+				do_job(cin, out);
 			} else {
-				std::ifstream fin(arg, ios::binary);
+				errno = 0;
+				std::ifstream fin(argv[i], ios::binary);
 				if (!fin) {
-					std::cerr << program_name << ": " << arg << ": cannot open" << endl;
+					cerr << program_name << ": " << argv[i] << ": " << strerror(errno) << endl;
 					retval = EXIT_FAILURE;
-					return;
+					continue;
 				}
 				do_job(fin, out);
 			}
-		});
+		}
 	}
 
 	return retval;

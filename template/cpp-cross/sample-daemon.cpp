@@ -22,12 +22,13 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
 #include <ctime>
+#include <filesystem>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <thread>
 
 // C++ third party library
@@ -67,53 +68,13 @@ volatile sig_atomic_t want_to_exit { ATOMIC_FALSE };
 /*  */
 /* ---------------------------------------------------------------------- */
 
-#define STREQ(s1, s2) (((s1)[0] == (s2)[0]) && (std::strcmp((s1), (s2)) == 0))
-
-/* ---------------------------------------------------------------------- */
-/*  */
-/* ---------------------------------------------------------------------- */
-
-inline std::string trim_right(const std::string& s, const std::string& chars = "\t\n\v\f\r ")
+std::string my_basename(std::string_view s)
 {
-	auto rpos = s.find_last_not_of(chars);
+	std::filesystem::path path { s };
 
-	return (rpos == std::string::npos) ? "" : s.substr(0, rpos + 1);
-}
-
-/* ---------------------------------------------------------------------- */
-/*  */
-/* ---------------------------------------------------------------------- */
-
-std::string my_basename(const char * const s)
-{
-	using std::string;
-
-	static const string DOT { "." };
-	static const string SEP { "/" };
-#if defined(_WIN32) || defined(_WIN64)
-	static const string WSEP { "\\" };
-	static const string SEPS { SEP + WSEP };
-#else // defined(_WIN32) || defined(_WIN64)
-	static const string SEPS { SEP };
-#endif // defined(_WIN32) || defined(_WIN64)
-
-	if (s == nullptr) {
-		return DOT;
-	}
-
-	string t = s;
-
-	if (t.empty()) {
-		return DOT;
-	}
-
-	const auto path = trim_right(t, SEPS);
-	if (path.empty()) {
-		return string { t.back() };
-	}
-
-	auto pos = path.find_last_of(SEPS);
-	return (pos == string::npos) ? path : path.substr(pos + 1);
+	return path.empty() ? "."
+	       : path.has_filename() ? path.filename().string()
+	       : path.string();
 }
 
 /* ---------------------------------------------------------------------- */
@@ -295,22 +256,25 @@ DONE:
 
 int main(int argc, char *argv[])
 {
-	using std::cerr;
-	using std::cout;
+	using namespace std::string_view_literals;
+	using std::cerr,
+	      std::cout;
 
 	program_name = my_basename(argv[0]);
 
 	for (; (argc > 1) && (argv[1][0] == '-') && (argv[1][1] != '\0'); argc--, argv++) {
+		const auto *p = &argv[1][1];
+
 		if (argv[1][1] == '-') {
-			const auto *p = &argv[1][2];
+			p = &argv[1][2];
 
 			if (*p == '\0') {
 				argc--, argv++;
 				break;
-			} else if (STREQ(p, "help")) {
+			} else if (p == "help"sv) {
 				usage(cout);
 				return EXIT_SUCCESS;
-			} else if (STREQ(p, "version")) {
+			} else if (p == "version"sv) {
 				version();
 				return EXIT_SUCCESS;
 			} else {
@@ -319,8 +283,6 @@ int main(int argc, char *argv[])
 			}
 			continue;
 		}
-
-		const auto *p = &argv[1][1];
 
 		do switch (*p) {
 		case 'h':
