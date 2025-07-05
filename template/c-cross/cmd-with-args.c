@@ -54,11 +54,9 @@ my_basename(const char * const name)
 #	define PATH_SEP '/'
 #endif /* defined(_WIN32) || defined(_WIN64) */
 
-	const char *bn;
-
 	assert(name != NULL);
 
-	bn = strrchr(name, PATH_SEP);
+	const char *bn = strrchr(name, PATH_SEP);
 	return (bn == NULL) ? name : bn+1;
 }
 
@@ -91,8 +89,6 @@ version(void)
 int
 main(int argc, char *argv[])
 {
-	int i;
-
 	program_name = my_basename(argv[0]);
 
 	for (; (argc > 1) && (argv[1][0] == '-') && (argv[1][1] != '\0'); argc--, argv++) {
@@ -137,7 +133,7 @@ main(int argc, char *argv[])
 
 	/* FIXME: write a code here. */
 
-	for (i = 1; i < argc; i++) {
+	for (int i = 1; i < argc; i++) {
 		(void) puts(argv[i]);
 	}
 

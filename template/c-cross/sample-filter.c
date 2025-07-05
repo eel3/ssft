@@ -70,11 +70,9 @@ my_basename(const char * const name)
 #	define PATH_SEP '/'
 #endif /* defined(_WIN32) || defined(_WIN64) */
 
-	const char *bn;
-
 	assert(name != NULL);
 
-	bn = strrchr(name, PATH_SEP);
+	const char *bn = strrchr(name, PATH_SEP);
 	return (bn == NULL) ? name : bn+1;
 }
 
@@ -110,6 +108,7 @@ do_job(FILE * const in, FILE * const out)
 	assert((in != NULL) && (out != NULL));
 
 	/* FIXME: write a code here. */
+	(void) in;
 	(void) fputs("hello, world\n", out);
 }
 
@@ -120,10 +119,6 @@ do_job(FILE * const in, FILE * const out)
 int
 main(int argc, char *argv[])
 {
-	const char *output;
-	FILE *out;
-	int retval;
-
 	program_name = my_basename(argv[0]);
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -139,7 +134,7 @@ main(int argc, char *argv[])
 	}
 #endif /* defined(_WIN32) || defined(_WIN64) */
 
-	output = "-";
+	const char *output = "-";
 
 	for (; (argc > 1) && (argv[1][0] == '-') && (argv[1][1] != '\0'); argc--, argv++) {
 		const char *p = &argv[1][1];
@@ -196,6 +191,8 @@ main(int argc, char *argv[])
 		} while (*++p != '\0');
 	}
 
+	FILE *out;
+
 	if (STREQ(output, "-")) {
 		out = stdout;
 	} else if (errno = 0, (out = fopen(output, "wb")) == NULL) {
@@ -205,15 +202,14 @@ main(int argc, char *argv[])
 		/*EMPTY*/
 	}
 
-	retval = EXIT_SUCCESS;
+	int retval = EXIT_SUCCESS;
 
 	if (argc <= 1) {
 		do_job(stdin, out);
 	} else {
-		int i;
-		FILE *in;
+		for (int i = 1; i < argc; i++) {
+			FILE *in;
 
-		for (i = 1; i < argc; i++) {
 			if (STREQ(argv[i], "-")) {
 				in = stdin;
 			} else if (errno = 0, (in = fopen(argv[i], "rb")) == NULL) {

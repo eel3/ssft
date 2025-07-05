@@ -88,8 +88,8 @@ writelog(const char * const fmt, ...)
 	assert(fmt != NULL);
 
 	FILE * const out = stderr;
-	va_list args;
 
+	va_list args;
 	va_start(args, fmt);
 
 	(void) fputs(program_name, out);
@@ -97,8 +97,8 @@ writelog(const char * const fmt, ...)
 
 	time_t now = time(NULL);
 	struct tm *tmp = localtime(&now);
-	char str[64];
 
+	char str[64];
 	size_t len = strftime(str, sizeof(str), "%Y-%m-%dT%H:%M:%S%z: ", tmp);
 	if (len != 0) {
 		(void) fputs(str, out);
