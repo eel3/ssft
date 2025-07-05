@@ -95,6 +95,7 @@ do_job(FILE * const in, FILE * const out)
 	assert((in != NULL) && (out != NULL));
 
 	/* FIXME: write a code here. */
+	(void) in;
 	(void) fputs("hello, world\n", out);
 }
 
@@ -105,10 +106,6 @@ do_job(FILE * const in, FILE * const out)
 int
 main(int argc, char *argv[])
 {
-	const char *output;
-	int c, retval;
-	FILE *out;
-
 	program_name = basename(argv[0]);
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -124,8 +121,9 @@ main(int argc, char *argv[])
 	}
 #endif /* defined(_WIN32) || defined(_WIN64) */
 
-	output = "-";
+	const char *output = "-";
 
+	int c;
 	while ((c = getopt(argc, argv, "ho:v")) != -1) {
 		switch (c) {
 		case 'h':
@@ -143,6 +141,8 @@ main(int argc, char *argv[])
 		}
 	}
 
+	FILE *out;
+
 	if (STREQ(output, "-")) {
 		out = stdout;
 	} else if (errno = 0, (out = fopen(output, "wb")) == NULL) {
@@ -152,15 +152,14 @@ main(int argc, char *argv[])
 		/*EMPTY*/
 	}
 
-	retval = EXIT_SUCCESS;
+	int retval = EXIT_SUCCESS;
 
 	if (optind >= argc) {
 		do_job(stdin, out);
 	} else {
-		int i;
-		FILE *in;
+		for (int i = optind; i < argc; i++) {
+			FILE *in;
 
-		for (i = optind; i < argc; i++) {
 			if (STREQ(argv[i], "-")) {
 				in = stdin;
 			} else if (errno = 0, (in = fopen(argv[i], "rb")) == NULL) {

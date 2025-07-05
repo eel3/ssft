@@ -65,10 +65,9 @@ version(void)
 int
 main(int argc, char *argv[])
 {
-	int c, i;
-
 	program_name = basename(argv[0]);
 
+	int c;
 	while ((c = getopt(argc, argv, "hv")) != -1) {
 		switch (c) {
 		case 'h':
@@ -90,7 +89,7 @@ main(int argc, char *argv[])
 
 	/* FIXME: write a code here. */
 
-	for (i = optind; i < argc; i++) {
+	for (int i = optind; i < argc; i++) {
 		(void) puts(argv[i]);
 	}
 

@@ -10,17 +10,9 @@
 /* ---------------------------------------------------------------------- */
 
 #ifdef __linux__
-#	ifndef _BSD_SOURCE
-#		define _BSD_SOURCE
-#	endif /* ndef _BSD_SOURCE */
-
 #	ifndef _DEFAULT_SOURCE
 #		define _DEFAULT_SOURCE
 #	endif /* ndef _DEFAULT_SOURCE */
-
-#	ifndef _POSIX_C_SOURCE
-#		define _POSIX_C_SOURCE 199309L
-#	endif /* ndef _POSIX_C_SOURCE */
 #endif /* def __linux__ */
 
 /* C standard library */
@@ -82,26 +74,24 @@ static volatile sig_atomic_t want_to_restart = ATOMIC_FALSE;
 static void
 writelog(const int pri, const char * const fmt, ...)
 {
-	va_list args;
-
 	assert(fmt != NULL);
 
+	va_list args;
 	va_start(args, fmt);
 
 	if (debug_mode) {
 		FILE * const out = stderr;
-		time_t now;
-		struct tm tmp;
-		size_t len;
-		char str[64];
 
 		(void) fputs(program_name, out);
 		(void) fputs(": ", out);
 
-		now = time(NULL);
+		time_t now = time(NULL);
+		struct tm tmp;
 		tzset();
 		(void) localtime_r(&now, &tmp);
-		len = strftime(str, sizeof(str), "%Y-%m-%dT%H:%M:%S%z: ", &tmp);
+
+		char str[64];
+		size_t len = strftime(str, sizeof(str), "%Y-%m-%dT%H:%M:%S%z: ", &tmp);
 		if (len != 0) {
 			(void) fputs(str, out);
 		}
@@ -279,8 +269,6 @@ service_main(void)
 {
 	static const struct timespec period_nsec = { 0, 10000000 };     /* 10msec */
 
-	int retval;
-
 	set_sigaction();
 
 	if (!setup_submodules()) {
@@ -294,7 +282,7 @@ service_main(void)
 	}
 
 	notice("service started.");
-	retval = EXIT_FAILURE;
+	int retval = EXIT_FAILURE;
 
 	for (; !want_to_exit; (void) nanosleep(&period_nsec, NULL)) {
 		/* FIXME: modify the code below if you need. */
@@ -335,10 +323,9 @@ DONE:
 int
 main(int argc, char *argv[])
 {
-	int c, retval;
-
 	program_name = basename(argv[0]);
 
+	int c;
 	while ((c = getopt(argc, argv, "dhv")) != -1) {
 		switch (c) {
 		case 'd':
@@ -361,7 +348,7 @@ main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-	retval = EXIT_FAILURE;
+	int retval = EXIT_FAILURE;
 
 	if (!debug_mode) {
 		openlog(program_name, LOG_PID | LOG_NDELAY, MY_SYSLOG_FACILITY);
