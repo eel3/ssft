@@ -13,7 +13,7 @@ CFLAGS          = -pthread      # FIXME
 CXXFLAGS        =               # FIXME
 OBJCFLAGS       =               # FIXME
 OBJCXXFLAGS     =               # FIXME
-CPPFLAGS        = -D_BSD_SOURCE -D_DEFAULT_SOURCE   # FIXME
+CPPFLAGS        = -D_DEFAULT_SOURCE   # FIXME
 LDFLAGS         = -pthread      # FIXME
 LDLIBS         := -lm -lrt      # FIXME
 
